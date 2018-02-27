@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>com.huawei</groupId>
+		<artifactId>TestingDesktop</artifactId>
+		<version>${tdt.version}</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>tdt-testplan-service</artifactId>
+	<packaging>jar</packaging>
+
+	<name>tdt-testplan-service</name>
+	<url>http://maven.apache.org</url>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.huawei</groupId>
+			<artifactId>tdt-logger-config</artifactId>
+			<version>${tdt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.huawei</groupId>
+			<artifactId>tdt-common-config</artifactId>
+			<version>${tdt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.huawei</groupId>
+			<artifactId>tdt-common</artifactId>
+			<version>${tdt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
