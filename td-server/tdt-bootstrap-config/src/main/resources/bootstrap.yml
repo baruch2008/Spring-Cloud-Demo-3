@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    config:
+      name: tdt-config
+      profile: dev
+      uri: http://localhost:8030/
+      label: master
+      
+pITtoolCI:
+  password: xxxxx
