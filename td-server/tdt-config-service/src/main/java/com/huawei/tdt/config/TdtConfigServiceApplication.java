@@ -1,5 +1,14 @@
 package com.huawei.tdt.config;
 
-public class TdtConfigServiceApplication {
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.config.server.EnableConfigServer;
 
+@SpringBootApplication
+@EnableConfigServer
+public class TdtConfigServiceApplication 
+{
+	public static void main(String[] args) {
+		SpringApplication.run(TdtConfigServiceApplication.class, args);
+	}
 }
