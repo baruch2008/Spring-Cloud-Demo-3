@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: tdt-web-service
+  profiles:
+    active: eureka-dev 
+        
+server:
+  port: 8020
