@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: tdt-config-service
+#  cloud:
+#    config:
+#      server:
+#        git:
+#          uri: xxxx
+#          search-paths: TDT-Config
+#          username: xxxx
+#          password: xxxx
+  profiles:
+    active: native  #native表示从本地资源中查找     
+server:
+  port: 8030
