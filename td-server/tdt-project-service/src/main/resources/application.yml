@@ -1,7 +1,8 @@
 spring:
   application:
-    name: tdt-testplan-service
+    name: tdt-project-service
   profiles:
-    active: eureka-dev    
+    active: eureka-dev,database-dev,redis-dev 
+    
 server:
-  port: 8050
+  port: 8040
