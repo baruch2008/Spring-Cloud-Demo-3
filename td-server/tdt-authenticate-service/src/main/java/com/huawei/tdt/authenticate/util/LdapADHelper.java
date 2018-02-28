@@ -413,8 +413,4 @@ public class LdapADHelper {
 		}
 		return user;
 	}
-
-	public static void main(String[] args) {
-		getUserDepartmentInfo("z00193212");
-	}
 }
