@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: tdt-authenticate-service
+#  profiles:
+#    active: database-dev,eureka-dev,redis-dev 
+     
+server:
+  port: 8010
