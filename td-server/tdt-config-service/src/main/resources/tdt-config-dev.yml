@@ -1,6 +1,4 @@
 spring:
-  datasource:
-    type: org.apache.commons.dbcp2.BasicDataSource
   redis:
     host: 127.0.0.1
     password: 
