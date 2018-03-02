@@ -30,6 +30,11 @@
 			<version>${tdt.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.huawei</groupId>
+			<artifactId>tdt-bootstrap-config</artifactId>
+			<version>${tdt.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-eureka</artifactId>
 		</dependency>
