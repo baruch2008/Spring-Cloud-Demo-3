@@ -1,4 +1,4 @@
-package com.huawei.tdt.versionmgr;
+package com.huawei.tdt.testplan;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,8 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableFeignClients
 @ComponentScan(basePackages = {"com.huawei.tdt"})
-public class TdtVersionMgrServiceApplication {
+public class TdtTestPlanServiceApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(TdtVersionMgrServiceApplication.class, args);
+		SpringApplication.run(TdtTestPlanServiceApplication.class, args);
 	}
 }
