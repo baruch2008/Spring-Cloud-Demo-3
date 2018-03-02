@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: tdt-gateway-service
+#  profiles:
+#    include: eureka-dev,redis-dev 
+  
+server:
+  port: 9000
+  
+zuul:
+  sensitive-headers: isSuccess
+  host:
+    socket-timeout-millis: 30000
+    connect-timeout-millis: 2000
+    
+  routes:
+    auth:
+      path: /auth/**
+      serviceId: tdt-authenticate-service
+    project:
+      path: /project/**
+      serviceId: tdt-project-service
+    testplan:
+      path: /plan/**
+      serviceId: tdt-testplan-service
+    version:
+      path: /version/**
+      serviceId: tdt-versionmgr-service
+    web:
+      path: /web/**
+      serviceId: tdt-web-service
+
+app:
+  product:
+    name: TDT
+    cookiename: ${app.product.name}_SESSION
+    session:
+      timeout: 30
+      redisnamespace: ${app.product.name}
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
+
+ribbon:
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
