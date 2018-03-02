@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: tdt-versionmgr-service
+        
+server:
+  port: 8060
