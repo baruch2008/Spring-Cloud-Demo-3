@@ -1,14 +1,16 @@
 spring:
   application:
     name: tdt-config-service
-#  cloud:
-#    config:
-#      server:
+  cloud:
+    config:
+      server:
 #        git:
 #          uri: xxxx
 #          search-paths: TDT-Config
 #          username: xxxx
 #          password: xxxx
+        native:
+          searchLocations: classpath:/config,classpath:/config/db
   profiles:
     active: native  #native表示从本地资源中查找     
 server:
