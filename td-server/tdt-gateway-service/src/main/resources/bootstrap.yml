@@ -1,0 +1,6 @@
+spring:
+  cloud:
+    config:
+      name: tdt-config
+  profiles:
+    active: dev

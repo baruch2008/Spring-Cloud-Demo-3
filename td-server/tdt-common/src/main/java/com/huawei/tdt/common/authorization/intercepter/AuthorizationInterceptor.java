@@ -13,11 +13,10 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.huawei.tdt.common.authorization.annotation.Authorization;
 import com.huawei.tdt.common.authorization.constants.Constants;
 import com.huawei.tdt.common.authorization.manager.TokenManager;
-import com.huawei.tdt.common.authorization.model.TokenModel;
+import com.huawei.tdt.common.authorization.model.Token;
 
 /**
  * 自定义拦截器，判断此次请求是否有权限
- * @see com.huawei.tdt.common.authorization.annotation.scienjus.authorization.annotation.Authorization
  */
 @Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
@@ -36,7 +35,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         //从header中得到token
         String authorization = request.getHeader(Constants.AUTHORIZATION);
         //验证token
-        TokenModel model = manager.getToken(authorization);
+        Token model = manager.getToken(authorization);
         if (manager.checkToken(model)) {
             //如果token验证成功，将token对应的用户id存在request中，便于之后注入
             request.setAttribute(Constants.CURRENT_USER_ID, model.getUserId());

@@ -27,6 +27,13 @@ public class Team implements Serializable {
      * 描述
      */
     private String desc;
+    
+    /**
+     * 0:表示整个项目团队，1:表示项目中小组
+     * 
+     * 给项目中配置成员时，先创建先类型为0的Team，再往User表以及Team与User关联表中插入相关数据
+     */
+    private int type;
 
     /**
      * 所属项目ID，对应DB中的ID
@@ -57,6 +64,14 @@ public class Team implements Serializable {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getProjectId() {

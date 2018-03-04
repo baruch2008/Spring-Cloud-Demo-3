@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Spring Cloud Web Demo</title>
+<script type="text/javascript" src="/web/js/lib/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+	function login() {
+		/* $.get("/producer/hello?name=test", function(data, status) {
+			alert(data+";"+status);
+		}); */
+		$.ajax({
+			type: "POST",
+			url: "/auth/login",
+			data: '{"username":"lwx537094", "password": "Tiger@123"}',
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			success: function(data) {
+				//window.location.href="/web/page/main.html";
+				redirectToMainPage();
+			}
+		});
+	}
+	
+	function redirectToMainPage() {
+		$.get("/web/page/main.html");
+	}
+</script>
+</head>
+<body>
+<table>
+	<tr>
+		<td><label>用户名:</label></td><td><input type="text" id="username" name="username"></td>
+	</tr>
+	<tr>
+		<td><label>密码:</label></td><td><input type="password" id="password" name="password"></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<input type="reset" name="button" id="resetBtn" value="重置" />
+			<input type="button" name="login" id="loginBtn"  value="登录" onclick="javascrip:login();"></input>
+		</td>
+	</tr>
+</table>
+<a href="/web/page/main.html">Main Page</a>
+</body>
+</html>

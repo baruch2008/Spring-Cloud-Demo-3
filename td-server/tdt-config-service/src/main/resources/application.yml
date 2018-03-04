@@ -4,13 +4,13 @@ spring:
   cloud:
     config:
       server:
-#        git:
-#          uri: xxxx
-#          search-paths: TDT-Config
-#          username: xxxx
-#          password: xxxx
-        native:
-          searchLocations: classpath:/config,classpath:/config/db
+        git:
+          uri: https://github.com/baruch2008/Spring-Cloud-Demo-3/
+          search-paths: TDT-Config,TDT-Config/db
+          username: baruch2008
+          password: P@ssword123
+#        native:
+#          searchLocations: classpath:/config,classpath:/config/db
   profiles:
     active: native  #native表示从本地资源中查找     
 server:

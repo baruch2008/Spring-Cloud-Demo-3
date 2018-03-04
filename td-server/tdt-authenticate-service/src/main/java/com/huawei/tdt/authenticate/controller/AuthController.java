@@ -24,7 +24,7 @@ import com.huawei.tdt.authenticate.util.LdapADHelper;
 import com.huawei.tdt.common.authorization.annotation.Authorization;
 import com.huawei.tdt.common.authorization.constants.ResponseStatusEnum;
 import com.huawei.tdt.common.authorization.manager.TokenManager;
-import com.huawei.tdt.common.authorization.model.TokenModel;
+import com.huawei.tdt.common.authorization.model.Token;
 import com.huawei.tdt.common.entity.User;
 import com.huawei.tdt.common.mapper.UserMapper;
 import com.huawei.tdt.common.model.ResponseResult;
@@ -47,7 +47,7 @@ public class AuthController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseResult login(@RequestBody UserVo userVo) {
 
-		ResponseResult respResult = new ResponseResult();
+		/*ResponseResult respResult = new ResponseResult();
 		response.setHeader("isSuccess", "false");
 
 		boolean isPassed = false;
@@ -82,22 +82,33 @@ public class AuthController {
 
 			}
 
-			TokenModel tokenModel = tokenMgr.createToken(userVo.getUsername());
+			Token token = tokenMgr.createToken(userVo.getUsername());
 
-			Cookie authorizationCookie = new Cookie("authorization", tokenModel.getToken());
-			authorizationCookie.setHttpOnly(true);
-			authorizationCookie.setMaxAge(-1);
-			response.addCookie(authorizationCookie);
+            Cookie authorizationCookie = new Cookie("authorization", token.getToken());
+            authorizationCookie.setHttpOnly(true);
+            authorizationCookie.setMaxAge(-1);
+            response.addCookie(authorizationCookie);
 
-			response.addCookie(new Cookie("userId", tokenModel.getUserId()));
+            response.addCookie(new Cookie("userId", token.getUserId()));
 
 			LOGGER.debug("The user {} logined.", userVo.getUsername());
 
 		} else {
 			respResult.setStatus(ResponseStatusEnum.FAIL);
 			respResult.setCode("用户名或密码不正确");
-		}
+		}*/
 
+	    ResponseResult respResult = new ResponseResult();
+        response.setHeader("isSuccess", "true");
+        Token token = tokenMgr.createToken(userVo.getUsername());
+
+        Cookie authorizationCookie = new Cookie("authorization", token.getToken());
+        authorizationCookie.setHttpOnly(true);
+        authorizationCookie.setMaxAge(-1);
+        response.addCookie(authorizationCookie);
+
+        response.addCookie(new Cookie("userId", token.getUserId()));
+        
 		return respResult;
 	}
 

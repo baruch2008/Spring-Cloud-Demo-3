@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Spring Cloud Demo</title>
+<script type="text/javascript" src="/web/js/lib/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+	function query() {
+		$.get("/producer/hello?name=test", function(data, status) {
+			alert(data+" : "+status);
+		}); 
+	}
+</script>
+</head>
+<body>
+	<strong>Welcome !!!!!</strong>
+	<table>
+		<tr>
+			<td><input type="button" name="query" id="queryBtn"  value="查询" onclick="javascrip:query();"></input></td>
+		</tr>
+	</table>
+</body>
+</html>
