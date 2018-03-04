@@ -10,11 +10,17 @@ public class TestResult implements Serializable {
 
     private String iterOrTaskUri;
 
+    /**
+     * 迭代或任务
+     * 0:Iterator,1:Task
+     */
     private String type;
 
     private String lastResult;
 
     private long updateTime;
+    
+    private String branchUri;
 
     public String getTestCaseUri() {
         return testCaseUri;
@@ -54,5 +60,13 @@ public class TestResult implements Serializable {
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getBranchUri() {
+        return branchUri;
+    }
+
+    public void setBranchUri(String branchUri) {
+        this.branchUri = branchUri;
     }
 }

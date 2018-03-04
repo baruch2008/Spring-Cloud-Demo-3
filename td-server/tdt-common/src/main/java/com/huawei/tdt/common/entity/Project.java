@@ -65,7 +65,16 @@ public class Project implements Serializable {
 
     private List<User> owners;
 
+    /**
+     * 项目对应的分支
+     */
     private TestVersion testVersion;
+    
+    /**
+     * 是否已归档
+     * 
+     */
+    private boolean isArchived;
 
     public String getProjectId() {
         return projectId;
@@ -177,5 +186,13 @@ public class Project implements Serializable {
 
     public void setTestVersion(TestVersion testVersion) {
         this.testVersion = testVersion;
+    }
+
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(boolean isArchived) {
+        this.isArchived = isArchived;
     }
 }

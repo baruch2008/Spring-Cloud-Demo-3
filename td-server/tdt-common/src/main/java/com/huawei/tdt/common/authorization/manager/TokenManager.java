@@ -1,6 +1,6 @@
 package com.huawei.tdt.common.authorization.manager;
 
-import com.huawei.tdt.common.authorization.model.TokenModel;
+import com.huawei.tdt.common.authorization.model.Token;
 
 public interface TokenManager {
 
@@ -9,21 +9,21 @@ public interface TokenManager {
      * @param userId 指定用户的id
      * @return 生成的token
      */
-    public TokenModel createToken(String userId);
+    public Token createToken(String userId);
 
     /**
      * 检查token是否有效
      * @param model token
      * @return 是否有效
      */
-    public boolean checkToken(TokenModel model);
+    public boolean checkToken(Token model);
 
     /**
      * 从字符串中解析token
      * @param authentication 加密后的字符串
      * @return
      */
-    public TokenModel getToken(String authentication);
+    public Token getToken(String authentication);
 
     /**
      * 清除token

@@ -1,6 +1,6 @@
 package com.huawei.tdt.common.authorization.model;
 
-public class TokenModel {
+public class Token {
 
     //用户id
     private String userId;
@@ -8,7 +8,7 @@ public class TokenModel {
     //随机生成的uuid
     private String token;
 
-    public TokenModel(String userId, String token) {
+    public Token(String userId, String token) {
         this.userId = userId;
         this.token = token;
     }

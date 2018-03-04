@@ -16,7 +16,11 @@ public class TestTask implements Serializable {
     private String taskType;
 
     private List<TestCase> testCases;
-
+    
+    private String iteratorUri;
+    
+    private String branchUri;
+    
     public String getUri() {
         return uri;
     }
@@ -55,5 +59,21 @@ public class TestTask implements Serializable {
 
     public void setTestCases(List<TestCase> testCases) {
         this.testCases = testCases;
+    }
+
+    public String getIteratorUri() {
+        return iteratorUri;
+    }
+
+    public void setIteratorUri(String iteratorUri) {
+        this.iteratorUri = iteratorUri;
+    }
+
+    public String getBranchUri() {
+        return branchUri;
+    }
+
+    public void setBranchUri(String branchUri) {
+        this.branchUri = branchUri;
     }
 }

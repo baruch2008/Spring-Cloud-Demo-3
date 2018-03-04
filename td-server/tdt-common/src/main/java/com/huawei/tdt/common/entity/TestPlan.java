@@ -110,6 +110,9 @@ public class TestPlan implements Serializable {
 
     private List<User> owners;
 
+    /**
+     * 冗余信息，便于给测试计划挑选用例时不需要关联项目得到分支URI
+     */
     private TestVersion testVersion;
 
     public String getId() {

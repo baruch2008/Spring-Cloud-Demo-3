@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.huawei.tdt.common.authorization.manager.TokenManager;
-import com.huawei.tdt.common.authorization.model.TokenModel;
+import com.huawei.tdt.common.authorization.model.Token;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
@@ -62,7 +62,7 @@ public class AccessAuthenticateFilter extends ZuulFilter {
 				ctx.setResponseBody("{\"result\":\"Not login!\"}");
 				return null;
 			} else {
-				TokenModel model = new TokenModel(userId, token);
+				Token model = new Token(userId, token);
 				boolean result = tokenMgr.checkToken(model);
 				if (!result) {
 					ctx.setSendZuulResponse(false);
