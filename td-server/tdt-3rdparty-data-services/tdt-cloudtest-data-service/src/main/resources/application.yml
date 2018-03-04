@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: tdt-cloudtest-data-service
+    
+server:
+  port: 8070
