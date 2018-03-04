@@ -5,7 +5,12 @@ spring:
 #    include: eureka-dev,redis-dev 
   
 server:
-  port: 9000
+  port: 8443
+  ssl:
+    key-store: D:/keystore.p12
+    key-store-password: 123456
+    keyStoreType: PKCS12
+    keyAlias: tomcat
   
 zuul:
   sensitive-headers: isSuccess
