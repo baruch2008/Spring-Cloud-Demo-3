@@ -31,6 +31,7 @@
 		<module>tdt-versionmgr-service</module>
 		<module>tdt-web-service</module>
 		<module>tdt-3rdparty-data-services/tdt-cloudtest-data-service</module>
+		<module>tdt-synchronize-service</module>
 	</modules>
 
 	<properties>
@@ -85,7 +86,16 @@
 				<artifactId>commons-lang3</artifactId>
 				<version>3.7</version>
 			</dependency>
-			
+			<dependency>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz-jobs</artifactId>
+				<version>2.3.0</version>
+			</dependency>
 			<dependency>
 				<groupId>net.sf.json-lib</groupId>
 				<artifactId>json-lib</artifactId>
