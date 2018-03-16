@@ -26,7 +26,7 @@ public class AccessAuthenticateFilter extends ZuulFilter {
 		String path = ctx.getRequest().getRequestURI();
 
 		// 请求路径以/web打头的表示请求web服务,访问静态资源,如html、JS等,不进行过滤
-		if (null == path || path.startsWith("/web") || path.startsWith("/auth/login") || path.startsWith("/project/login")) {
+		if (null == path || path.startsWith("/web") || path.startsWith("/auth/login") || path.endsWith("v2/api-docs")) {
 			return false;
 		}
 
