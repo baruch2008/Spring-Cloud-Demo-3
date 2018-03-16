@@ -11,4 +11,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Authorization {
+   /**
+     * Privilege ID
+     * @return Privilege ID
+     */
+    String id() default "";
 }
