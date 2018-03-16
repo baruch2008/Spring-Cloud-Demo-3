@@ -37,43 +37,31 @@ public class AccessAuthenticateFilter extends ZuulFilter {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 
-		Cookie[] cookies = request.getCookies();
-		if (null == cookies || 0 == cookies.length) {
+		String authentication = CommonUtil.getValue(request, Constants.AUTHORIZATION);
+		if (null == authentication)
+		{
+		    ctx.setSendZuulResponse(false);
+		    ctx.setResponseStatusCode(HTTP_CODE_NOT_LOGIN);
+		    ctx.set("isSuccess", false);
+		    ctx.setResponseBody("{\"result\":\"Not login!\"}");
+		}
+		else
+		{
+		    Token token = tokenMgr.getToken(authentication);
+		    boolean result = tokenMgr.checkToken(token);
+		    if (result)
+		    {
+			request.setAttribute(Constants.CURRENT_USER_ID, token.getUserId());
+		    }
+		    else
+		    {
 			ctx.setSendZuulResponse(false);
-			ctx.setResponseStatusCode(401);
+			ctx.setResponseStatusCode(HTTP_CODE_NOT_LOGIN);
 			ctx.set("isSuccess", false);
 			ctx.setResponseBody("{\"result\":\"Not login!\"}");
-			return null;
-		} else {
-			String token = null;
-			String userId = null;
-			for (Cookie cookie : cookies) {
-				if ("authorization".equals(cookie.getName())) {
-					token = cookie.getValue();
-				} else if ("userId".equals(cookie.getName())) {
-					userId = cookie.getValue();
-				}
-			}
-			
-			if (null == token || null == userId) {
-				ctx.setSendZuulResponse(false);
-				ctx.setResponseStatusCode(401);
-				ctx.set("isSuccess", false);
-				ctx.setResponseBody("{\"result\":\"Not login!\"}");
-				return null;
-			} else {
-				Token model = new Token(userId, token);
-				boolean result = tokenMgr.checkToken(model);
-				if (!result) {
-					ctx.setSendZuulResponse(false);
-					ctx.setResponseStatusCode(401);
-					ctx.set("isSuccess", false);
-					ctx.setResponseBody("{\"result\":\"Not login!\"}");
-					return null;
-				}
-			}
+		    }
 		}
-		
+
 		return null;
 	}
 
