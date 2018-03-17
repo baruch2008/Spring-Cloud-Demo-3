@@ -11,7 +11,7 @@ import com.huawei.tdt.gateway.filter.AccessAuthorizeFilter;
 
 @SpringBootApplication
 @EnableZuulProxy
-@ComponentScan(basePackages = {"com.huawei"}) // Fix the issue that can not find the component defined in the other jars.
+@ComponentScan(basePackages = {"com.huawei.tdt"}) // Fix the issue that can not find the component defined in the other jars.
 public class TdtGatewayServiceApplication {
 
 	public static void main(String[] args) {

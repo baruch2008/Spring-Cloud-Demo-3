@@ -1,4 +1,4 @@
-package com.huawei.tdt.gateway.config;
+package com.huawei.tdt.gateway.config.session;
 
 import javax.annotation.PostConstruct;
 
