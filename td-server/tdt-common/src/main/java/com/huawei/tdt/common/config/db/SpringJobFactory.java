@@ -1,4 +1,4 @@
-package com.huawei.tdt.common.config;
+package com.huawei.tdt.common.config.db;
 
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.factory.annotation.Autowired;

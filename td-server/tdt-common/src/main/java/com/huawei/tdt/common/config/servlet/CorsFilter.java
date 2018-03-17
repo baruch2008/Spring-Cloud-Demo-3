@@ -15,7 +15,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 /**
@@ -49,7 +49,7 @@ public class CorsFilter implements Filter
 
         if (request.getMethod().equals("OPTIONS"))
         {
-            response.setStatus(HttpStatus.SC_OK);
+            response.setStatus(HttpStatus.OK.value());
             response.getWriter().write("OPTIONS returns OK");
             return;
         }

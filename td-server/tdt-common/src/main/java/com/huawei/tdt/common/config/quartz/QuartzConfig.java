@@ -1,4 +1,4 @@
-package com.huawei.tdt.common.config;
+package com.huawei.tdt.common.config.quartz;
 
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+
+import com.huawei.tdt.common.config.db.SpringJobFactory;
 
 /**
  * QuartzConfig

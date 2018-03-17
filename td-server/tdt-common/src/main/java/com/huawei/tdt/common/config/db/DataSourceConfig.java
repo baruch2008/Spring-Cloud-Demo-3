@@ -1,4 +1,4 @@
-package com.huawei.tdt.common.config;
+package com.huawei.tdt.common.config.db;
 
 import javax.sql.DataSource;
 

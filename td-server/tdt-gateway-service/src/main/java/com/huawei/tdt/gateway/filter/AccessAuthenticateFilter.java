@@ -1,12 +1,13 @@
 package com.huawei.tdt.gateway.filter;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.huawei.tdt.common.authorization.constants.AuthConstants;
 import com.huawei.tdt.common.authorization.manager.TokenManager;
 import com.huawei.tdt.common.authorization.model.Token;
+import com.huawei.tdt.common.util.CommonUtil;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
@@ -18,61 +19,55 @@ import com.netflix.zuul.context.RequestContext;
  */
 public class AccessAuthenticateFilter extends ZuulFilter {
 
-	@Autowired
-	private TokenManager tokenMgr;
+    @Autowired
+    private TokenManager tokenMgr;
 
-	public boolean shouldFilter() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-		String path = ctx.getRequest().getRequestURI();
+    public boolean shouldFilter() {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        String path = ctx.getRequest().getRequestURI();
 
-		// 请求路径以/web打头的表示请求web服务,访问静态资源,如html、JS等,不进行过滤
-		if (null == path || path.startsWith("/web") || path.startsWith("/auth/login") || path.endsWith("v2/api-docs")) {
-			return false;
-		}
+        // 请求路径以/web打头的表示请求web服务,访问静态资源,如html、JS等,不进行过滤
+        if (null == path || path.startsWith("/web") || path.startsWith("/auth/login") || path.endsWith("v2/api-docs")) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public Object run() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-		HttpServletRequest request = ctx.getRequest();
+    public Object run() {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        HttpServletRequest request = ctx.getRequest();
 
-		String authentication = CommonUtil.getValue(request, Constants.AUTHORIZATION);
-		if (null == authentication)
-		{
-		    ctx.setSendZuulResponse(false);
-		    ctx.setResponseStatusCode(HTTP_CODE_NOT_LOGIN);
-		    ctx.set("isSuccess", false);
-		    ctx.setResponseBody("{\"result\":\"Not login!\"}");
-		}
-		else
-		{
-		    Token token = tokenMgr.getToken(authentication);
-		    boolean result = tokenMgr.checkToken(token);
-		    if (result)
-		    {
-			request.setAttribute(Constants.CURRENT_USER_ID, token.getUserId());
-		    }
-		    else
-		    {
-			ctx.setSendZuulResponse(false);
-			ctx.setResponseStatusCode(HTTP_CODE_NOT_LOGIN);
-			ctx.set("isSuccess", false);
-			ctx.setResponseBody("{\"result\":\"Not login!\"}");
-		    }
-		}
+        String authentication = CommonUtil.getValue(request, AuthConstants.AUTHORIZATION);
+        if (null == authentication) {
+            ctx.setSendZuulResponse(false);
+            ctx.setResponseStatusCode(AuthConstants.HTTP_CODE_NOT_LOGIN);
+            ctx.set("isSuccess", false);
+            ctx.setResponseBody("{\"result\":\"Not login!\"}");
+        } else {
+            Token token = tokenMgr.getToken(authentication);
+            boolean result = tokenMgr.checkToken(token);
+            if (result) {
+                request.setAttribute(AuthConstants.CURRENT_USER_ID, token.getUserId());
+            } else {
+                ctx.setSendZuulResponse(false);
+                ctx.setResponseStatusCode(AuthConstants.HTTP_CODE_NOT_LOGIN);
+                ctx.set("isSuccess", false);
+                ctx.setResponseBody("{\"result\":\"Not login!\"}");
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public String filterType() {
-		return "pre";
-	}
+    @Override
+    public String filterType() {
+        return "pre";
+    }
 
-	@Override
-	public int filterOrder() {
-		return 2;
-	}
+    @Override
+    public int filterOrder() {
+        return 2;
+    }
 
 }
