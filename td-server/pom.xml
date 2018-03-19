@@ -31,7 +31,7 @@
 		<module>tdt-versionmgr-service</module>
 		<module>tdt-web-service</module>
 		<module>tdt-3rdparty-data-services/tdt-cloudtest-data-service</module>
-		<module>tdt-synchronize-service</module>
+		<!-- <module>tdt-synchronize-service</module> -->
 	</modules>
 
 	<properties>
@@ -146,41 +146,6 @@
 	
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.13</version>
-				<configuration>
-					<configLocation>conf/checkstyle_ruleset_minimal_IT_product_line.xml</configLocation>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>3.0.1</version>
-				<configuration>
-					<configLocation>conf/findbugs_ruleset_minimal_IT_product_line.xml</configLocation>
-					<excludeFilterFile>conf/findbugs_exclude.xml</excludeFilterFile>
-					<canGenerateReport>true</canGenerateReport>
-					<xmlOutput>true</xmlOutput>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<configuration>
-					<configLocation>
-						conf/pmd_ruleset_minimal_IT_product_line.xml
-					</configLocation>
-					<linkXRef>false</linkXRef>
-					<sourceEncoding>utf-8</sourceEncoding>
-					<minimumTokens>100</minimumTokens>
-					<targetJdk>1.8</targetJdk>
-					<verbose>true</verbose>
-				</configuration>
-				<version>3.4</version>
-			</plugin>
-
 			<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
