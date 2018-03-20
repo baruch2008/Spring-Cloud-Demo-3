@@ -24,6 +24,7 @@ public class SwaggerConfig
                 .pathMapping("/")
                 .select()
                 .paths(PathSelectors.any())
+                .paths(Predicates.not(PathSelectors.regex("/error.*"))) // 屏蔽默认的basic-error-controller
                 .build()
                 .apiInfo(testApiInfo());
     }
