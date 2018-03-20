@@ -27,6 +27,8 @@ public class AuthController {
     private HttpServletResponse response;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ApiOperation(value = "登录", notes = "根据域用户名和密码对用户身份进行验证", produces = "application/json")
+    @ApiResponses({ @ApiResponse(code = Constants.HTTP_OK, message = "登录成功后返回数据", response = ResponseResult.class) })
     public ResponseResult login(@RequestBody UserVo userVo) {
         ResponseResult respResult = new ResponseResult();
         response.setHeader("isSuccess", "true");
