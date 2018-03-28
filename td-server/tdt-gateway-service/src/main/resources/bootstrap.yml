@@ -1,6 +1,6 @@
 spring:
   cloud:
     config:
-      name: tdt-config,
+      name: tdt-config,route-config,db-config
   profiles:
     active: dev
