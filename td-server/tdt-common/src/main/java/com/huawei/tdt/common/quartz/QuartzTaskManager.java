@@ -159,6 +159,8 @@ public final class QuartzTaskManager
             triggerDate = new Date();
         }
 
+        removeQuartzTask(task.getIdentity());
+        
         JobDetail job = JobBuilder.newJob(task.getClass()).withIdentity(task.getIdentity(), Constants.JOB_GROUP)
                 .usingJobData(buildJobDataMap(task)).build();
         Trigger trigger = TriggerBuilder.newTrigger().withIdentity(task.getIdentity(), Constants.TRIGGER_GROUP)
@@ -179,6 +181,8 @@ public final class QuartzTaskManager
             LOGGER.error("The task schedule is null.");
         }
 
+        removeQuartzTask(task.getIdentity());
+        
         JobDetail job = JobBuilder.newJob(task.getClass()).withIdentity(task.getIdentity(), Constants.JOB_GROUP)
                 .usingJobData(buildJobDataMap(task)).build();
         Trigger trigger = TriggerBuilder.newTrigger().withIdentity(task.getIdentity(), Constants.TRIGGER_GROUP)
