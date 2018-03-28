@@ -1,7 +1,9 @@
 package com.huawei.tdt.gateway.config.swagger;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.springframework.cloud.netflix.zuul.filters.Route;
 import org.springframework.cloud.netflix.zuul.filters.RouteLocator;
@@ -33,15 +35,22 @@ public class DocumentationConfig implements SwaggerResourcesProvider
     @Override
     public List<SwaggerResource> get()
     {
-        List<SwaggerResource> resources = new ArrayList<SwaggerResource>();
         List<Route> routes = routeLocator.getRoutes();
-        routes.forEach(route -> 
+        List<SwaggerResource> resources = routes.stream().filter(new Predicate<Route>()
         {
-            if (!route.getId().endsWith("-service"))
+            @Override
+            public boolean test(Route route)
             {
-                resources.add(swaggerResource(route.getId(), route.getFullPath().replace("**", "v2/api-docs"), "2.0"));
+                return !route.getId().endsWith("-service");
             }
-        });
+        }).map(new Function<Route, SwaggerResource>()
+        {
+            @Override
+            public SwaggerResource apply(Route route)
+            {
+                return swaggerResource(route.getId(), route.getFullPath().replace("**", "v2/api-docs"), "2.0");
+            }
+        }).collect(Collectors.toList());
 
         return resources;
     }
