@@ -8,24 +8,33 @@ public final class CommonUtil {
 
     }
 
-    public static String getValue(HttpServletRequest request, String key) {
-        Object value = request.getAttribute(key);
-        if (null != value) {
-            return String.valueOf(value);
+        public static String getValue(HttpServletRequest request, String key)
+    {
+        String value = request.getHeader(key);
+        if (null != value)
+        {
+            return value;
         }
-
         Cookie[] cookies = request.getCookies();
-        if (null != cookies && 0 < cookies.length) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(key)) {
-                    return cookie.getValue();
-                }
+        if (null == cookies)
+        {
+            return value;
+        }
+        if (Constants.ZERO >= cookies.length)
+        {
+            return value;
+        }
+        for (Cookie cookie : cookies)
+        {
+            if (cookie.getName().equals(key))
+            {
+                value = cookie.getValue();
+                break;
             }
         }
-        
-        return null;
+        return value;
     }
-    
+
     /**
      * 获取当前用户ID
      * 
