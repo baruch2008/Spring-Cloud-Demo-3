@@ -21,396 +21,429 @@ import org.slf4j.LoggerFactory;
 import com.huawei.tdt.authenticate.model.DomainUser;
 import com.huawei.tdt.common.util.SpringUtil;
 
-public class LdapADHelper {
-	public LdapADHelper() {
+/**
+ * LDAP帮助类.
+ */
+public class LdapADHelper
+{
+    /**
+     * 用来输出日志的静态对象.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(LdapADHelper.class);
 
-	}
+    /**
+     * 规避“魔数”.
+     */
+    private static final int ARRAY_CAPACITY = 20;
 
-	private static final Logger logger = LoggerFactory.getLogger(LdapADHelper.class);
+    /**
+     * 规避“魔数”.
+     */
+    private static final int BREAK_IF_NUM_GTE = 5;
 
-	private static String url = "ldap://lggad05-dc:389/";// 默认端口为80的可以不用填写，其他端口需要填写，如ldap://xxx.com:8080
+    /**
+     * LDAP登录的url. 默认端口为80的可以不用填写，其他端口需要填写，如ldap://xxx.com:8080
+     */
+    private static String url = "ldap://lggad05-dc:389/";
 
-	private String adminName = "china\\pITtoolCI";// 注意用户名的写法：domain\User 或 User@domain.com
+    private static LdapADHelper ldapADHelper = null;
 
-	private DynamicConfig dynamicConfig = SpringUtil.getBean(DynamicConfig.class);
-	
-	private DirContext ctx = null;
+    /**
+     * LDAP管理员名称. 注意用户名的写法：domain\User 或 User@domain.com
+     */
+    private String adminName = "china\\pITtoolCI";
 
-	/**
-	 * 
-	 * 初始化ldap
-	 * 
-	 */
+    private String searchBase = "dc=china,dc=huawei,dc=com";
 
-	public void initLdap() {
-		Hashtable<String, String> ldapEnv = new Hashtable<String, String>(20);
+    private String attributes = "department;givenname;SAMAccountName;" + "extensionAttribute1;mail;mobile;"
+            + "hw-DepartName1;hw-DepartName2;hw-DepartName3;" + "hw-DepartName4;hw-DepartName5;hw-DepartName6;"
+            + "hw-DepartName7";
 
-		ldapEnv.put(Context.SECURITY_AUTHENTICATION, "simple"); // LDAP访问安全级别
+    /**
+     * 鉴权动态配置.
+     */
+    private AuthDynamicConfig dynamicConfig = SpringUtil.getBean(AuthDynamicConfig.class);
 
-		ldapEnv.put(Context.SECURITY_PRINCIPAL, adminName); // AD User
+    /**
+     * 上下文.
+     */
+    private DirContext ctx = null;
 
-		ldapEnv.put(Context.SECURITY_CREDENTIALS, dynamicConfig.getLdapAdminPassword()); // AD Password
+    /**
+     * 构造函数.
+     */
+    private LdapADHelper()
+    {
 
-		ldapEnv.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); // LDAP工厂类
+    }
 
-		// ldapEnv.put(Context.REFERRAL, "throw");
+    /**
+     * Get LdapADHelper
+     * @return LdapADHelper
+     */
+    public static synchronized LdapADHelper getLdapADHelper()
+    {
+        if (null == ldapADHelper)
+        {
+            ldapADHelper = new LdapADHelper();
+        }
 
-		// ldapEnv.put("java.naming.ldap.version", "2");
+        return ldapADHelper;
+    }
 
-		ldapEnv.put("com.sun.jndi.ldap.read.timeout", "8000");
+    /**
+     * 初始化ldap.
+     */
 
-		ldapEnv.put(Context.PROVIDER_URL, url);
+    private void initLdap()
+    {
+        Hashtable<String, String> ldapEnv = new Hashtable<String, String>(ARRAY_CAPACITY);
+        // LDAP访问安全级别
+        ldapEnv.put(Context.SECURITY_AUTHENTICATION, "simple");
+        // AD User
+        ldapEnv.put(Context.SECURITY_PRINCIPAL, adminName);
+        // AD Password
+        ldapEnv.put(Context.SECURITY_CREDENTIALS, dynamicConfig.getLdapAdminPassword());
+        // LDAP工厂类
+        ldapEnv.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 
-		try {
-			ctx = new InitialLdapContext(ldapEnv, null);
-			logger.info("初始化ldap成功！");
+        // ldapEnv.put(Context.REFERRAL, "throw");
 
-		} catch (NamingException e) {
-			logger.error("Init ldap failed. The login user:" + adminName, e);
-		}
+        // ldapEnv.put("java.naming.ldap.version", "2");
 
-	}
+        ldapEnv.put("com.sun.jndi.ldap.read.timeout", "8000");
 
-	/**
-	 * 
-	 * 关闭ldap
-	 * 
-	 */
+        ldapEnv.put(Context.PROVIDER_URL, url);
 
-	public void closeLdap() {
+        try
+        {
+            ctx = new InitialLdapContext(ldapEnv, null);
+            LOGGER.info("初始化ldap成功！");
 
-		try {
+        }
+        catch (NamingException e)
+        {
+            LOGGER.error("Init ldap failed. The login user:" + adminName, e);
+        }
 
-			this.ctx.close();
+    }
 
-		} catch (NamingException e) {
-			logger.error("Close ldap failed.", e);
-		}
+    /**
+     * 关闭ldap.
+     */
 
-	}
+    private void closeLdap()
+    {
+        try
+        {
+            if (null != ctx)
+            {
+                ctx.close();
+            }
 
-	/**
-	 * 
-	 * @param type
-	 *            查询类型
-	 * 
-	 * @param filter
-	 *            条件字段
-	 * 
-	 * @param value
-	 *            条件值
-	 * 
-	 * @param attr
-	 *            需要查询的属性列表,以为;号分割
-	 * 
-	 * @return
-	 * 
-	 */
+        }
+        catch (NamingException e)
+        {
+            LOGGER.error("Close ldap failed.", e);
+        }
 
-	public DomainUser getADInfo(String type, String filter, String value, String attributes) {
+    }
 
-		DomainUser user = new DomainUser();
-		try {
-			// 域节点
-			String searchBase = "dc=china,dc=huawei,dc=com";
+    /**
+     * 从参数value中解析获取信息.
+     *
+     * @param value 字符串值(用户账号、中文名或英文名)
+     * @return 域用户列表
+     */
+    public List<DomainUser> fuzzyQueryUser(String value)
+    {
+        List<DomainUser> resultList = new ArrayList<DomainUser>();
 
-			// LDAP搜索过滤器类
+        String searchFilter = "(&(objectClass=user)(|(SAMAccountName=" + value + "*)(givenname=" + value + ")(sn="
+                + value + ")(cn=" + value + "*)))";
+        SearchControls searchCtls = new SearchControls();
+        searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        if (attributes != null && !"".equals(attributes))
+        {
+            String[] returnedAtts = attributes.split(";");
+            searchCtls.setReturningAttributes(returnedAtts);
+        }
+        try
+        {
+            initLdap();
 
-			// cn=*name*模糊查询 cn=name 精确查询
+            NamingEnumeration< ? > answer = ctx.search(searchBase, searchFilter, searchCtls);
+            int num = 0;
+            while (answer.hasMore())
+            {
+                SearchResult sr = (SearchResult) answer.next();
+                Attributes attrs = sr.getAttributes();
+                if (null == attrs)
+                {
+                    continue;
+                }
+                DomainUser user = parseUserAttributes(attrs);
+                resultList.add(user);
+                if (num >= BREAK_IF_NUM_GTE)
+                {
+                    break;
+                }
+                num++;
+            }
 
-			// String searchFilter = "(&(objectClass="+type+")("+filter+"=*" + name + "*))";
-			// //这个是模糊查询，速度很慢
+        }
+        catch (NamingException e)
+        {
+            LOGGER.error("Getting user info failed.", e);
+        }
+        finally
+        {
+            closeLdap();
+        }
 
-			String searchFilter = "(&(objectClass=" + type + ")(" + filter + "=" + value + "))";
+        return resultList;
+    }
 
-			// 创建搜索控制器
+    /**
+     * 从华为id解析域用户对象.
+     *
+     * @param huaweiID 华为id
+     * @return 域用户对象
+     */
+    public DomainUser getUserInfo(String huaweiID)
+    {
+        DomainUser user = null;
+        try
+        {
+            user = getUserInfo("user", "SAMAccountName", huaweiID, attributes);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("获取用户信息失败！" + e);
+        }
 
-			SearchControls searchCtls = new SearchControls();
+        return user;
+    }
 
-			// 设置搜索范围
+    /**
+     * 批量查询用户
+     * 
+     * @param userIds 用户ID集
+     * @return 用户集
+     */
+    public List<DomainUser> batchQueryUserInfos(List<String> userIds)
+    {
+        List<DomainUser> resultList = new ArrayList<DomainUser>(userIds.size());
 
-			searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        StringBuilder searchFilter = new StringBuilder();
+        searchFilter.append("(&(objectClass=user)(|");
+        for (String userId : userIds)
+        {
+            searchFilter.append("(SAMAccountName=");
+            searchFilter.append(userId);
+            searchFilter.append(")");
+        }
+        searchFilter.append("))");
 
-			if (attributes != null && !"".equals(attributes)) {
+        SearchControls searchCtls = new SearchControls();
+        searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        if (attributes != null && !"".equals(attributes))
+        {
+            String[] returnedAtts = attributes.split(";");
+            searchCtls.setReturningAttributes(returnedAtts);
+        }
+        try
+        {
+            initLdap();
 
-				String returnedAtts[] = attributes.split(";"); // 定制返回属性
+            NamingEnumeration< ? > answer = ctx.search(searchBase, searchFilter.toString(), searchCtls);
+            while (answer.hasMore())
+            {
+                SearchResult sr = (SearchResult) answer.next();
+                Attributes attrs = sr.getAttributes();
+                if (null == attrs)
+                {
+                    continue;
+                }
+                DomainUser user = parseUserAttributes(attrs);
+                resultList.add(user);
+            }
+        }
+        catch (NamingException e)
+        {
+            LOGGER.error("Getting user info failed.", e);
+        }
+        finally
+        {
+            closeLdap();
+        }
 
-				searchCtls.setReturningAttributes(returnedAtts); // 设置返回属性集, 不设置则返回所有属性
+        return resultList;
+    }
 
-			}
+    /**
+     * 解析部门信息
+     * 
+     * @param attrs attrs
+     * @param user user
+     * @throws NamingException
+     */
+    private void parseDepartmentInfo(Attributes attrs, DomainUser user) throws NamingException
+    {
+        String departmentInfo = "";
+        if (attrs.get("hw-DepartName1") != null)
+        {
+            user.setDepartName1((String) attrs.get("hw-DepartName1").get(0));
+            departmentInfo += user.getDepartName1() + "/";
 
-			// 根据设置的域节点、过滤器类和搜索控制器搜索LDAP得到结果
+        }
+        if (attrs.get("hw-DepartName2") != null)
+        {
+            user.setDepartName2((String) attrs.get("hw-DepartName2").get(0));
+            departmentInfo += user.getDepartName2() + "/";
+        }
+        if (attrs.get("hw-DepartName3") != null)
+        {
+            user.setDepartName3((String) attrs.get("hw-DepartName3").get(0));
+            departmentInfo += user.getDepartName3() + "/";
+        }
+        if (attrs.get("hw-DepartName4") != null)
+        {
+            user.setDepartName4((String) attrs.get("hw-DepartName4").get(0));
+            departmentInfo += user.getDepartName4() + "/";
+        }
+        if (attrs.get("hw-DepartName5") != null)
+        {
+            user.setDepartName5((String) attrs.get("hw-DepartName5").get(0));
+            departmentInfo += user.getDepartName5() + "/";
+        }
 
-			NamingEnumeration<?> answer = ctx.search(searchBase, searchFilter, searchCtls);// Search for objects using
-																							// the filter
+        if (attrs.get("hw-DepartName6") != null)
+        {
+            user.setDepartName6((String) attrs.get("hw-DepartName6").get(0));
+            departmentInfo += user.getDepartName6() + "/";
+        }
 
-			while (answer.hasMore()) {// 遍历结果集
+        if (attrs.get("hw-DepartName7") != null)
+        {
+            user.setDepartName6((String) attrs.get("hw-DepartName7").get(0));
+            departmentInfo += user.getDepartName6() + "/";
+        }
 
-				SearchResult sr = (SearchResult) answer.next();// 得到符合搜索条件的DN
+        user.setInformation(departmentInfo);
+    }
 
-				Attributes Attrs = sr.getAttributes();// 得到符合条件的属性集
+    /**
+     * parseUserAttributes
+     * 
+     * @param attrs
+     * @return DomainUser
+     * @throws NamingException
+     */
+    private DomainUser parseUserAttributes(Attributes attrs) throws NamingException
+    {
+        DomainUser user = new DomainUser();
+        if (attrs.get("mail") != null)
+        {
+            user.setUserEmail((String) attrs.get("mail").get(0));
+        }
 
-				if (Attrs != null) {
-					if (Attrs.get("mail") != null) {
-						user.setUserEmail((String) Attrs.get("mail").get(0));
-					}
-					if (Attrs.get("extensionAttribute1") != null) {
-						user.setUserName((String) Attrs.get("extensionAttribute1").get(0));
-					}
-					if (Attrs.get("mobile") != null) {
-						user.setUserTelephone((String) Attrs.get("mobile").get(0));
-					}
-					String departmentInfo = "";
-					if (Attrs.get("hw-DepartName1") != null) {
-						departmentInfo += (String) Attrs.get("hw-DepartName1").get(0) + "/";
-					}
-					if (Attrs.get("hw-DepartName2") != null) {
-						departmentInfo += (String) Attrs.get("hw-DepartName2").get(0) + "/";
-					}
-					if (Attrs.get("hw-DepartName3") != null) {
-						departmentInfo += (String) Attrs.get("hw-DepartName3").get(0) + "/";
-					}
-					if (Attrs.get("hw-DepartName4") != null) {
-						departmentInfo += (String) Attrs.get("hw-DepartName4").get(0) + "/";
-					}
-					if (Attrs.get("hw-DepartName5") != null) {
-						departmentInfo += (String) Attrs.get("hw-DepartName5").get(0) + "/";
-					}
-					user.setInformation(departmentInfo);
-					/*
-					 * if (departmentInfo.indexOf("IT产品线")!=-1){ user.setIsFromIT(1); }else{
-					 * user.setIsFromIT(0); }
-					 */
-				} // if
+        if (attrs.get("department") != null)
+        {
+            user.setDepartName((String) attrs.get("department").get(0));
+        }
+        if (attrs.get("SAMAccountName") != null)
+        {
+            user.setUserName(attrs.get("SAMAccountName").get(0).toString().toLowerCase(Locale.US));
+        }
+        if (attrs.get("givenname") != null)
+        {
+            user.setEnglishname((String) attrs.get("givenname").get(0));
+        }
+        if (attrs.get("extensionAttribute1") != null)
+        {
 
-			} // while
+            user.setChinesename((String) attrs.get("extensionAttribute1").get(0));
+        }
+        if (attrs.get("mobile") != null)
+        {
+            user.setUserTelephone((String) attrs.get("mobile").get(0));
+        }
 
-		} catch (NamingException e) {
-			logger.error("", e);
-		}
-		return user;
-	}
+        parseDepartmentInfo(attrs, user);
+        if (user.getInformation().indexOf("IT产品线") != -1)
+        {
+            user.setIsFromIT(1);
+        }
+        else
+        {
+            user.setIsFromIT(0);
+        }
+        if (StringUtils.isEmpty(user.getChinesename()))
+        {
+            user.setChinesename(user.getEnglishname());
+        }
+        return user;
+    }
 
-	public List<DomainUser> getInfo(String value) {
-		String attributes = "department;givenname;SAMAccountName;extensionAttribute1;mail;mobile;hw-DepartName1;hw-DepartName2;hw-DepartName3;hw-DepartName4;hw-DepartName5";
-		List<DomainUser> resultList = new ArrayList<DomainUser>();
-		String searchBase = "dc=china,dc=huawei,dc=com";
-		String searchFilter = "(&(objectClass=user)(|(SAMAccountName=" + value + "*)(givenname=" + value + ")(sn="
-				+ value + ")(cn=" + value + "*)))";
-		SearchControls searchCtls = new SearchControls();
-		searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		if (attributes != null && !"".equals(attributes)) {
-			String returnedAtts[] = attributes.split(";");
-			searchCtls.setReturningAttributes(returnedAtts);
-		}
-		try {
-			NamingEnumeration<?> answer = ctx.search(searchBase, searchFilter, searchCtls);
-			int num = 0;
-			while (answer.hasMore()) {
+    /**
+     * 获取AD信息.
+     *
+     * @param type 查询类型
+     * @param filter 条件字段
+     * @param value 条件值
+     * @param attrParams 需要查询的属性列表,以为;号分割
+     * @return 域用户对象
+     */
+    private DomainUser getUserInfo(String type, String filter, String value, String attrParams)
+    {
+        DomainUser user = null;
+        try
+        {
+            // LDAP搜索过滤器类
+            String searchFilter = "(&(objectClass=" + type + ")(" + filter + "=" + value + "))";
 
-				SearchResult sr = (SearchResult) answer.next();
-				Attributes Attrs = sr.getAttributes();
-				if (Attrs.get("givenname") == null && Attrs.get("extensionAttribute1") == null) {
-					continue;
-				}
-				DomainUser user = new DomainUser();
-				if (Attrs.get("mail") != null) {
-					user.setUserEmail((String) Attrs.get("mail").get(0));
-				}
-				// System.out.println("department:"+Attrs.get("department").get(0));
-				/*
-				 * System.out.println("SAMAccountName:"+Attrs.get("SAMAccountName").get(0)); if
-				 * (Attrs.get("givenname") != null) {
-				 * System.out.println("givenname:"+Attrs.get("givenname").get(0)); } if
-				 * (Attrs.get("sn") != null) { System.out.println("sn:"+Attrs.get("sn").get(0));
-				 * } if (Attrs.get("cn") != null) {
-				 * System.out.println("cn:"+Attrs.get("cn").get(0)); }
-				 * System.out.println("extensionAttribute1:"+Attrs.get("extensionAttribute1").
-				 * get(0));
-				 */
+            // 创建搜索控制器
+            SearchControls searchCtls = new SearchControls();
 
-				if (Attrs.get("department") != null) {
-					user.setDepartName((String) Attrs.get("department").get(0));
-				}
-				if (Attrs.get("SAMAccountName") != null) {
-					user.setUserName(Attrs.get("SAMAccountName").get(0).toString().toLowerCase(Locale.US));
-				}
-				if (Attrs.get("givenname") != null) {
-					user.setEnglishname((String) Attrs.get("givenname").get(0));
-				}
-				if (Attrs.get("extensionAttribute1") != null) {
+            // 设置搜索范围
+            searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-					user.setChinesename((String) Attrs.get("extensionAttribute1").get(0));
-				}
-				if (Attrs.get("mobile") != null) {
-					user.setUserTelephone((String) Attrs.get("mobile").get(0));
-				}
-				String departmentInfo = "";
-				if (Attrs.get("hw-DepartName1") != null) {
-					departmentInfo += (String) Attrs.get("hw-DepartName1").get(0) + "/";
-				}
-				if (Attrs.get("hw-DepartName2") != null) {
-					departmentInfo += (String) Attrs.get("hw-DepartName2").get(0) + "/";
-				}
-				if (Attrs.get("hw-DepartName3") != null) {
-					departmentInfo += (String) Attrs.get("hw-DepartName3").get(0) + "/";
-				}
-				if (Attrs.get("hw-DepartName4") != null) {
-					departmentInfo += (String) Attrs.get("hw-DepartName4").get(0) + "/";
-				}
-				if (Attrs.get("hw-DepartName5") != null) {
-					departmentInfo += (String) Attrs.get("hw-DepartName5").get(0) + "/";
-				}
-				user.setInformation(departmentInfo);
-				if (departmentInfo.indexOf("IT产品线") != -1) {
-					user.setIsFromIT(1);
-				} else {
-					user.setIsFromIT(0);
-				}
-				if (StringUtils.isEmpty(user.getChinesename())) {
-					user.setChinesename(user.getEnglishname());
-				}
-				resultList.add(user);
-				if (num >= 5) {
-					break;
-				}
-				num++;
-			}
+            if (attrParams != null && !"".equals(attrParams))
+            {
+                // 定制返回属性
+                String[] returnedAtts = attrParams.split(";");
+                // 设置返回属性集, 不设置则返回所有属性
+                searchCtls.setReturningAttributes(returnedAtts);
+            }
 
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-		return resultList;
-	}
+            initLdap();
 
-	public DomainUser getDepartmentInfo(String type, String filter, String value, String attributes) {
+            // 根据设置的域节点、过滤器类和搜索控制器搜索LDAP得到结果
+            // Search for objects using the filter
+            NamingEnumeration< ? > answer = ctx.search(searchBase, searchFilter, searchCtls);
+            // 遍历结果集
+            while (answer.hasMore())
+            {
+                // 得到符合搜索条件的DN
+                SearchResult sr = (SearchResult) answer.next();
+                // 得到符合条件的属性集
+                Attributes attrs = sr.getAttributes();
+                if (attrs != null)
+                {
+                    user = parseUserAttributes(attrs);
+                }
+            }
+        }
+        catch (NamingException e)
+        {
+            LOGGER.error("Getting user info failed.", e);
+        }
+        finally
+        {
+            closeLdap();
+        }
 
-		DomainUser user = new DomainUser();
-		try {
-			// 域节点
-			String searchBase = "dc=china,dc=huawei,dc=com";
-			String searchFilter = "(&(objectClass=" + type + ")(" + filter + "=" + value + "))";
-			// 创建搜索控制器
-			SearchControls searchCtls = new SearchControls();
-			// 设置搜索范围
-			searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-			if (attributes != null && !"".equals(attributes)) {
-				String returnedAtts[] = attributes.split(";"); // 定制返回属性
-				searchCtls.setReturningAttributes(returnedAtts); // 设置返回属性集, 不设置则返回所有属性
-			}
-
-			// 根据设置的域节点、过滤器类和搜索控制器搜索LDAP得到结果
-			NamingEnumeration<?> answer = ctx.search(searchBase, searchFilter, searchCtls);
-
-			while (answer.hasMore()) {
-				// 遍历结果集
-				SearchResult sr = (SearchResult) answer.next();// 得到符合搜索条件的DN
-				Attributes Attrs = sr.getAttributes();// 得到符合条件的属性集
-				if (Attrs != null) {
-					if (Attrs.get("mail") != null) {
-						user.setUserEmail((String) Attrs.get("mail").get(0));
-					}
-					if (Attrs.get("SAMAccountName") != null) {
-						user.setUserName(Attrs.get("SAMAccountName").get(0).toString().toLowerCase(Locale.US));
-					}
-					if (Attrs.get("givenname") != null) {
-						user.setEnglishname((String) Attrs.get("givenname").get(0));
-					}
-					if (Attrs.get("extensionAttribute1") != null) {
-						user.setChinesename((String) Attrs.get("extensionAttribute1").get(0));
-					}
-					if (Attrs.get("mobile") != null) {
-						user.setUserTelephone((String) Attrs.get("mobile").get(0));
-					}
-					String departmentName = "";
-					String departmentInfo = "";
-					if (Attrs.get("hw-DepartName1") != null) {
-						String name = (String) Attrs.get("hw-DepartName1").get(0);
-						departmentInfo += name + "/";
-						departmentName = name;
-					}
-					if (Attrs.get("hw-DepartName2") != null) {
-						String name = (String) Attrs.get("hw-DepartName2").get(0);
-						departmentInfo += name + "/";
-						departmentName = name;
-					}
-					if (Attrs.get("hw-DepartName3") != null) {
-						String name = (String) Attrs.get("hw-DepartName3").get(0);
-						departmentInfo += name + "/";
-						departmentName = name;
-					}
-					if (Attrs.get("hw-DepartName4") != null) {
-						String name = (String) Attrs.get("hw-DepartName4").get(0);
-						departmentInfo += name + "/";
-						departmentName = name;
-					}
-					if (Attrs.get("hw-DepartName5") != null) {
-						String name = (String) Attrs.get("hw-DepartName5").get(0);
-						departmentInfo += name + "/";
-						departmentName = name;
-					}
-					if (Attrs.get("hw-DepartName6") != null) {
-						String name = (String) Attrs.get("hw-DepartName6").get(0);
-						departmentInfo += name + "/";
-						departmentName = name;
-					}
-					if (Attrs.get("hw-DepartName7") != null) {
-						String name = (String) Attrs.get("hw-DepartName7").get(0);
-						departmentInfo += name + "/";
-						departmentName = name;
-					}
-					user.setInformation(departmentInfo);
-					user.setDepartName(departmentName);
-				}
-			}
-
-		} catch (NamingException e) {
-			logger.error("", e);
-		}
-		return user;
-	}
-
-	public static List<DomainUser> userInfo(String value) {
-		LdapADHelper ad = new LdapADHelper();
-		ad.initLdap();
-		List<DomainUser> resultList = new ArrayList<DomainUser>();
-		;
-		try {
-			resultList = ad.getInfo(value);
-			ad.closeLdap();
-		} catch (Exception e) {
-			logger.error("获取用户信息失败！" + e);
-		}
-		return resultList;
-	}
-
-	public static DomainUser getUserInfo(String huaweiID) {
-		LdapADHelper ad = new LdapADHelper();
-		ad.initLdap();
-		// 通过域账号查找用户所有属性extensionAttribute1;mail;mobile
-		DomainUser user = null;
-		try {
-			user = ad.getADInfo("user", "SAMAccountName", huaweiID,
-					"department;givenname;SAMAccountName;extensionAttribute1;mail;mobile;hw-DepartName1;hw-DepartName2;hw-DepartName3;hw-DepartName4;hw-DepartName5");
-			ad.closeLdap();
-		} catch (Exception e) {
-			logger.error("获取用户信息失败！" + e);
-		}
-		return user;
-	}
-
-	public static DomainUser getUserDepartmentInfo(String huaweiID) {
-		LdapADHelper ad = new LdapADHelper();
-		ad.initLdap();
-		// 通过域账号查找用户部门信息
-		DomainUser user = null;
-		try {
-			user = ad.getDepartmentInfo("user", "SAMAccountName", huaweiID,
-					"givenname;SAMAccountName;extensionAttribute1;mail;mobile;hw-DepartName1;hw-DepartName2;hw-DepartName3;hw-DepartName4;hw-DepartName5;hw-DepartName6;hw-DepartName7");
-			ad.closeLdap();
-		} catch (Exception e) {
-			logger.error("获取用户信息失败！" + e);
-		}
-		return user;
-	}
+        return user;
+    }
 }
