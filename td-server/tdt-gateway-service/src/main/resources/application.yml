@@ -1,40 +1,16 @@
 spring:
   application:
     name: tdt-gateway-service
-#  profiles:
-#    include: eureka-dev,redis-dev 
   
 server:
-  port: 8443
-  ssl:
-    key-store: D:/keystore.p12
-    key-store-password: 123456
-    keyStoreType: PKCS12
-    keyAlias: tomcat
-  
+  port: 9000
+             
 zuul:
   sensitive-headers: isSuccess
   host:
     socket-timeout-millis: 30000
     connect-timeout-millis: 2000
     
-  routes:
-    auth:
-      path: /auth/**
-      serviceId: tdt-authenticate-service
-    project:
-      path: /project/**
-      serviceId: tdt-project-service
-    testplan:
-      path: /plan/**
-      serviceId: tdt-testplan-service
-    version:
-      path: /version/**
-      serviceId: tdt-versionmgr-service
-    web:
-      path: /web/**
-      serviceId: tdt-web-service
-
 app:
   product:
     name: TDT
