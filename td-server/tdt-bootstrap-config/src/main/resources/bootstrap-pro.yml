@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+#      name: tdt-config,db-config #交由对应服务中的bootstrap.yml配置，这是考虑不同的服务需要不同的配置
+      profile: dev
+      uri: http://localhost:8030/
+      label: master
