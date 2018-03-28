@@ -3,8 +3,26 @@ spring:
     host: 127.0.0.1
     password: 
     port: 6379
+    timeout: 2000
+    pool:
+      max-active: -1
+      max-wait: -1
+      max-idle: 8
+      min-idle: 2
+  session:
+    store-type: none
     
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8000/eureka/
+  instance:
+    preferIpAddress: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+          
+tdt:
+  tokenExpireTime: 3600 # The unit is second.
+  project:
+    sync:
+      schedule: 0 0 23 * * ?
+  isNeedAuthFilter: false
