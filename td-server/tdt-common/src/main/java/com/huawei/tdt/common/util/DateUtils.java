@@ -15,16 +15,6 @@ public final class DateUtils
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(DateUtils.class);
 
-    /**
-     * 日期格式化对象
-     */
-    private static final SimpleDateFormat FORMATTER1 = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-
-    /**
-     * 日期格式化对象
-     */
-    private static final SimpleDateFormat FORMATTER2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     private DateUtils()
     {
 
@@ -39,7 +29,8 @@ public final class DateUtils
      */
     public static long convertDateToNumDate(Date date)
     {
-        String strDate = FORMATTER1.format(date);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String strDate = formatter.format(date);
         return Long.parseLong(strDate);
     }
 
@@ -52,7 +43,8 @@ public final class DateUtils
      */
     public static String convertDateToStringDate(Date date)
     {
-        return FORMATTER1.format(date);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        return formatter.format(date);
     }
 
     /**
@@ -66,8 +58,11 @@ public final class DateUtils
     {
         try
         {
-            Date date = FORMATTER1.parse(String.valueOf(digitDate));
-            return FORMATTER2.format(date);
+            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            Date date = formatter1.parse(String.valueOf(digitDate));
+            
+            SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return formatter2.format(date);
         }
         catch (ParseException e)
         {
