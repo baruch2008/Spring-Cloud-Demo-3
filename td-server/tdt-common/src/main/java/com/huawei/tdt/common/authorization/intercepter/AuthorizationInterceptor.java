@@ -1,6 +1,7 @@
 package com.huawei.tdt.common.authorization.intercepter;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,41 +12,82 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.huawei.tdt.common.authorization.annotation.Authorization;
-import com.huawei.tdt.common.authorization.constants.AuthConstants;
-import com.huawei.tdt.common.authorization.manager.TokenManager;
-import com.huawei.tdt.common.authorization.model.Token;
+import com.huawei.tdt.common.constants.Constants;
+import com.huawei.tdt.common.mapper.UserMapper;
+import com.huawei.tdt.common.util.CommonUtil;
 
 /**
- * 自定义拦截器，判断此次请求是否有权限
+ * 自定义拦截器，判断此次请求是否有权限.
  */
 @Component
-public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
-
+public class AuthorizationInterceptor extends HandlerInterceptorAdapter
+{
+    /**
+     * 用户Mapper
+     */
     @Autowired
-    private TokenManager manager;
+    private UserMapper userMapper;
 
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response, Object handler) throws Exception {
-        //如果不是映射到方法直接通过
-        if (!(handler instanceof HandlerMethod)) {
+    /**
+     * 鉴权预处理.
+     *
+     * @param request servlet请求
+     * @param response servlet响应
+     * @param handler 处理器
+     * @return 预处理是否成功
+     * @throws Exception 任何异常
+     */
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
+    {
+        // 如果不是映射到方法直接通过
+        if (!(handler instanceof HandlerMethod))
+        {
             return true;
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
-        //从header中得到token
-        String authorization = request.getHeader(AuthConstants.AUTHORIZATION);
-        //验证token
-        Token model = manager.getToken(authorization);
-        if (manager.checkToken(model)) {
-            //如果token验证成功，将token对应的用户id存在request中，便于之后注入
-            request.setAttribute(AuthConstants.CURRENT_USER_ID, model.getUserId());
+        Authorization authAnnotation = method.getAnnotation(Authorization.class);
+        if (authAnnotation == null)
+        {
             return true;
         }
-        //如果验证token失败，并且方法注明了Authorization，返回401错误
-        if (method.getAnnotation(Authorization.class) != null) {
+
+        String userId = CommonUtil.getUserId(request);
+
+        String resourceId = CommonUtil.getValue(request, Constants.RESOURCE_ID);
+        if (null == resourceId)
+        {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
+
+        String privilegeId = authAnnotation.id();
+
+        if (!checkPrivilege(resourceId, userId, privilegeId))
+        {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return false;
+        }
+
         return true;
+    }
+
+    private boolean checkPrivilege(String projectId, String userId, String privilegeId)
+    {
+        List<String> privileges = userMapper.getUserPrivileges(projectId, userId);
+        if (null == privileges || privileges.isEmpty())
+        {
+            return false;
+        }
+
+        for (String privilege : privileges)
+        {
+            if (privilege.equals(privilegeId))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
