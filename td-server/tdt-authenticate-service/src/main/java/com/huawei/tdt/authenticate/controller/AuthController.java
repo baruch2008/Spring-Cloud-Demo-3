@@ -18,6 +18,7 @@ import com.huawei.tdt.common.authorization.model.Token;
 import com.huawei.tdt.common.model.ResponseResult;
 import com.huawei.tdt.common.model.UserVo;
 
+@Api(value = "AuthController", tags = { "用户管理相关接口" })
 @RestController
 public class AuthController {
     @Autowired
