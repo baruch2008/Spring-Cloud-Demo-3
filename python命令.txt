@@ -1,3 +1,5 @@
+python -m pip install --upgrade pip 
+
 pip install D:\python-plugins\python_ldap-2.5.2-cp27-cp27m-win_amd64.whl
 
 pip install --proxy http://lwx537094:Tiger@123@proxy.huawei.com:8080 aniso8601
