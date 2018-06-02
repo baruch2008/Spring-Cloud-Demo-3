@@ -16,6 +16,8 @@ import com.huawei.tdt.common.authorization.annotation.Authorization;
 import com.huawei.tdt.common.authorization.manager.TokenManager;
 import com.huawei.tdt.common.authorization.model.Token;
 import com.huawei.tdt.common.constants.Constants;
+import com.huawei.tdt.common.entity.User;
+import com.huawei.tdt.common.mapper.UserMapper;
 import com.huawei.tdt.common.model.ResponseResult;
 import com.huawei.tdt.common.model.UserVo;
 
@@ -32,6 +34,9 @@ public class AuthController {
 
     @Autowired
     private HttpServletResponse response;
+    
+    @Autowired
+    private UserMapper userMapper;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation(value = "登录", notes = "根据域用户名和密码对用户身份进行验证", produces = "application/json")
@@ -47,6 +52,10 @@ public class AuthController {
         response.addCookie(authorizationCookie);
 
         response.addCookie(new Cookie("userId", token.getUserId()));
+        
+        User user = userMapper.getUserById("1");
+        
+        respResult.setData(user);
 
         return respResult;
     }

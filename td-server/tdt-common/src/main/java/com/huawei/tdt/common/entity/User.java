@@ -56,9 +56,12 @@ public class User implements Serializable {
         this.departmentName3 = departmentName3;
     }
 
-    public User(String id, String name) {
+    public User(String id, String name, String dp1, String dp2, String dp3) {
         this.id = id;
         this.name = name;
+        this.departmentName1 = dp1;
+        this.departmentName2 = dp2;
+        this.departmentName3 = dp3;
     }
 
     public String getId() {

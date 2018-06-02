@@ -1,7 +1,5 @@
 package com.huawei.etlapi.tmss.mapper;
 
-import java.util.List;
-
 import org.springframework.stereotype.Repository;
 
 /**

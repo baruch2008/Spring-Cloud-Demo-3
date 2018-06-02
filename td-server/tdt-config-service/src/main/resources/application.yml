@@ -11,7 +11,7 @@ spring:
           password: P@ssword123
 #        native:
 #          searchLocations: classpath:/config,classpath:/config/db,,classpath:/config/route
-  profiles:
-    active: native  #native表示从本地资源中查找     
+#  profiles:
+#    active: native  #native表示从本地资源中查找     
 server:
   port: 8030
