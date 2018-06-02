@@ -3,6 +3,9 @@ package com.huawei.tdt.common.util;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import com.huawei.tdt.common.authorization.model.Token;
+import com.huawei.tdt.common.constants.Constants;
+
 public final class CommonUtil {
     private CommonUtil() {
 

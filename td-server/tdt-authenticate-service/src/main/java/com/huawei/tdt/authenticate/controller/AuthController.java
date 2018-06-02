@@ -15,8 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.huawei.tdt.common.authorization.annotation.Authorization;
 import com.huawei.tdt.common.authorization.manager.TokenManager;
 import com.huawei.tdt.common.authorization.model.Token;
+import com.huawei.tdt.common.constants.Constants;
 import com.huawei.tdt.common.model.ResponseResult;
 import com.huawei.tdt.common.model.UserVo;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Api(value = "AuthController", tags = { "用户管理相关接口" })
 @RestController
