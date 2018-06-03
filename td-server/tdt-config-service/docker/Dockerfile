@@ -1,4 +1,4 @@
-FROM eclipse/ubuntu_jdk8
+FROM centos_jdk8
 COPY tdt-config-service-0.1.jar /usr/local
 COPY startService.sh /opt
 ENV TZ Asia/Shanghai
