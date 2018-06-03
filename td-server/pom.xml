@@ -25,12 +25,12 @@
 		<module>tdt-authenticate-service</module>
 		<module>tdt-config-service</module>
 		<module>tdt-eureka-service</module>
-		<module>tdt-gateway-service</module>
+		<!-- <module>tdt-gateway-service</module>
 		<module>tdt-project-service</module>
 		<module>tdt-testplan-service</module>
 		<module>tdt-versionmgr-service</module>
 		<module>tdt-web-service</module>
-		<module>tdt-3rdparty-data-services/tdt-cloudtest-data-service</module>
+		<module>tdt-3rdparty-data-services/tdt-cloudtest-data-service</module> -->
 		<!-- <module>tdt-synchronize-service</module> -->
 	</modules>
 
