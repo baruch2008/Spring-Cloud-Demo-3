@@ -5,14 +5,14 @@ spring:
 tdt:
   dbcp:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/tdt?characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://192.168.2.103:3306/tdt?characterEncoding=utf8&useSSL=false
     username: root
     password: 123456   
    
 etlapi:
   dbcp:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/tmss?&useUnicode=true&characterEncoding=utf8&autoReconnect=true
+    url: jdbc:mysql://192.168.2.103:3306/tmss?&useUnicode=true&characterEncoding=utf8&autoReconnect=true
     username: root
     password: 123456   
 

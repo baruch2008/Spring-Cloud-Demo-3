@@ -1,6 +1,6 @@
 spring:
   redis:
-    host: 127.0.0.1
+    host: 192.168.2.103
     password: 
     port: 6379
     timeout: 2000
@@ -15,7 +15,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8000/eureka/
+      defaultZone: http://192.168.154.180:8000/eureka/
   instance:
     preferIpAddress: true
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}
