@@ -35,6 +35,53 @@ public class FileUploadController
     private FastDFSConfig fastDFSConfig;
 
     /**
+     * 保存上传的文件至文件系统服务期
+     * 
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @param targetFile 文件
+     * @return 上传文件保存后的路径
+     * @throws Exception 操作异常
+     */
+    @RequestMapping(value = "/saveFile", method = RequestMethod.POST)
+    public ResponseResult<String> saveFile(@RequestParam(value = "targetFile", required = false) MultipartFile targetFile)
+    {
+        ResponseResult<String> result = new ResponseResult<String>();
+
+        String fileName = null;
+        String fileUrl = null;
+        try
+        {
+            byte[] bytes = targetFile.getBytes();
+            fileName = targetFile.getOriginalFilename();
+            long fileLength = targetFile.getSize();
+
+            FileUploadHandler fileUploadHandler = FileUploadHandler.getFileUploadHandler();
+            String[] results = fileUploadHandler.uploadFile(bytes, fileName, fileLength);
+            if (null != results)
+            {
+                fileUrl = "http://" + fastDFSConfig.getNginxTrackerHost() + ":" + fastDFSConfig.getNginxTrackerPort()
+                        + "/" + results[0] + "/" + results[1];
+                result.setData(fileUrl);
+            }
+            else
+            {
+                result.setStatus(ResponseStatusEnum.FAIL);
+                result.setCode("保存文件失败。");
+            }
+        }
+        catch (Exception e)
+        {
+            result.setStatus(ResponseStatusEnum.FAIL);
+            result.setCode("保存文件失败。");
+
+            LOGGER.error("上传文件失败。" + fileName, e);
+        }
+
+        return result;
+    }
+    
+    /**
      * 保存上传的文件至文件系统服务器
      * 
      * @param request HttpServletRequest
