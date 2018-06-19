@@ -2,6 +2,11 @@ spring:
   application:
     name: tdt-testplan-service
 # profiles:
-#    active: eureka-dev    
+#    active: eureka-dev
+  http:
+    multipart:
+      maxFileSize: 10Mb
+      maxRequestSize: 10Mb
+      
 server:
   port: 8050
