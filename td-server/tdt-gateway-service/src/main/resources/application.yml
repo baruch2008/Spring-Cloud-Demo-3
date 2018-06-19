@@ -1,6 +1,10 @@
 spring:
   application:
     name: tdt-gateway-service
+  http:
+    multipart:
+      maxFileSize: 10Mb
+      maxRequestSize: 10Mb
   
 server:
   port: 9000
