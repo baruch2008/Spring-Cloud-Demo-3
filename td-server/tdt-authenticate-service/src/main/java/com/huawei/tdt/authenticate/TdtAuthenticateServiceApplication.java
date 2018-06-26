@@ -14,6 +14,7 @@ import com.huawei.tdt.common.util.SpringUtil;
 @MapperScan(basePackages = {"com.huawei.tdt.common.mapper", "com.huawei.tdt.authenticate.mapper"})
 @ComponentScan(basePackages = {"com.huawei.tdt"}) // Fix the issue that can not find the component defined in the other jars.
 @Import(value={SpringUtil.class})
+@ServletComponentScan(basePackages = "com.huawei.tdt.authenticate.servlet")
 public class TdtAuthenticateServiceApplication {
 
 	public static void main(String[] args) {
