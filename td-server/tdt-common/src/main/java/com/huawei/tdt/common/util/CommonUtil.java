@@ -1,5 +1,10 @@
 package com.huawei.tdt.common.util;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Collection;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,26 +16,20 @@ public final class CommonUtil {
 
     }
 
-        public static String getValue(HttpServletRequest request, String key)
-    {
+    public static String getValue(HttpServletRequest request, String key) {
         String value = request.getHeader(key);
-        if (null != value)
-        {
+        if (null != value) {
             return value;
         }
         Cookie[] cookies = request.getCookies();
-        if (null == cookies)
-        {
+        if (null == cookies) {
             return value;
         }
-        if (Constants.ZERO >= cookies.length)
-        {
+        if (Constants.ZERO >= cookies.length) {
             return value;
         }
-        for (Cookie cookie : cookies)
-        {
-            if (cookie.getName().equals(key))
-            {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(key)) {
                 value = cookie.getValue();
                 break;
             }
@@ -44,17 +43,14 @@ public final class CommonUtil {
      * @param request 请求体
      * @return 用户ID
      */
-    public static String getUserId(HttpServletRequest request)
-    {
+    public static String getUserId(HttpServletRequest request) {
         Object attr = request.getAttribute(Constants.CURRENT_USER_ID);
-        if (null != attr)
-        {
+        if (null != attr) {
             return String.valueOf(attr);
         }
 
         Token token = CommonUtil.getToken(CommonUtil.getValue(request, Constants.AUTHORIZATION));
-        if (null != token)
-        {
+        if (null != token) {
             return token.getUserId();
         }
 
@@ -67,20 +63,51 @@ public final class CommonUtil {
      * @param authentication 鉴权串
      * @return Token
      */
-    public static Token getToken(String authentication)
-    {
-        if (authentication == null || authentication.length() == 0)
-        {
+    public static Token getToken(String authentication) {
+        if (authentication == null || authentication.length() == 0) {
             return null;
         }
         String[] param = authentication.split("_");
-        if (param.length != Constants.TWO)
-        {
+        if (param.length != Constants.TWO) {
             return null;
         }
         // 使用userId和源token简单拼接成的token，可以增加加密措施
         String userId = param[0];
         String token = param[1];
         return new Token(userId, token);
+    }
+
+    public static boolean isEmpty(String str) {
+        if (null == str || str.trim().isEmpty()) {
+            return true;
+        }
+
+        return true;
+    }
+
+    public static boolean isEmpty(Collection<? extends Object> list) {
+        if (null == list || list.isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static void closeInputStream(BufferedInputStream input) {
+        if (null != input) {
+            try {
+                input.close();
+            } catch (IOException e) {
+            }
+        }
+    }
+
+    public static void closeOutputStream(ByteArrayOutputStream output) {
+        if (null != output) {
+            try {
+                output.close();
+            } catch (IOException e) {
+            }
+        }
     }
 }

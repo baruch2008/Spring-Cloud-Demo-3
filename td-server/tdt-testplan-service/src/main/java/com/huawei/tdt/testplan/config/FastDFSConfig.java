@@ -1,4 +1,4 @@
-package com.huawei.tdt.itqualitymonthlyreport.config;
+package com.huawei.tdt.testplan.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

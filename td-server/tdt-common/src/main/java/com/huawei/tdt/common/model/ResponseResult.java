@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 
 import com.huawei.tdt.common.authorization.constants.ResponseStatusEnum;
 
-public class ResponseResult implements Serializable {
+public class ResponseResult<T> implements Serializable {
 
 	private static final long serialVersionUID = -7769210729209279489L;
 
@@ -18,7 +18,7 @@ public class ResponseResult implements Serializable {
 
 	private List<String> params = new ArrayList<String>();
 
-	private Object data;
+	private T data;
 
 	public ResponseStatusEnum getStatus() {
 		return status;
@@ -46,7 +46,7 @@ public class ResponseResult implements Serializable {
 		}
 	}
 
-	public ResponseResult addParam(String param) {
+	public ResponseResult<T> addParam(String param) {
 		if (null != param) {
 			this.params.add(param);
 		}
@@ -54,11 +54,11 @@ public class ResponseResult implements Serializable {
 		return this;
 	}
 
-	public Object getData() {
+	public T getData() {
 		return data;
 	}
 
-	public void setData(Object data) {
+	public void setData(T data) {
 		this.data = data;
 	}
 }

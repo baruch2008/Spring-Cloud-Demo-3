@@ -1,4 +1,4 @@
-package com.huawei.tdt.itqualitymonthlyreport.controller;
+package com.huawei.tdt.testplan.controller;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,12 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.huawei.tdt.common.authorization.constants.ResponseStatusEnum;
 import com.huawei.tdt.common.model.ResponseResult;
 import com.huawei.tdt.common.util.CommonUtil;
-import com.huawei.tdt.itqualitymonthlyreport.config.FastDFSConfig;
+import com.huawei.tdt.testplan.config.FastDFSConfig;
 
 /**
  * FileUploadController

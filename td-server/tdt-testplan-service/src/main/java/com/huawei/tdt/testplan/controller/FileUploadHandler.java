@@ -1,4 +1,4 @@
- package com.huawei.tdt.itqualitymonthlyreport.controller;
+ package com.huawei.tdt.testplan.controller;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.huawei.tdt.common.util.SpringUtil;
-import com.huawei.tdt.itqualitymonthlyreport.config.FastDFSConfig;
+import com.huawei.tdt.testplan.config.FastDFSConfig;
 
 /**
  * FileUploadUtil
