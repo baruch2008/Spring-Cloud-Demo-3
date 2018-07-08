@@ -16,3 +16,7 @@ etlapi:
     username: root
     password: 123456   
 
+mongo:
+  db:
+    name: hxjf
+    host: 127.0.0.1 
