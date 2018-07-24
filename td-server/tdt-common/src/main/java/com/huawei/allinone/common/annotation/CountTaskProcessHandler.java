@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 用于标注统计任务处理类
+ * 用于标注统计任务处理方法
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CountTaskProcessor {
+public @interface CountTaskProcessHandler {
     String id() default "";
 }
