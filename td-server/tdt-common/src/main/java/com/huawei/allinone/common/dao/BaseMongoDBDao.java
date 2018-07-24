@@ -1,4 +1,4 @@
-package com.huawei.allinone.dao;
+package com.huawei.allinone.common.dao;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.huawei.allinone.config.MongoDBConfig;
+import com.huawei.allinone.common.config.MongoDBConfig;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoException;

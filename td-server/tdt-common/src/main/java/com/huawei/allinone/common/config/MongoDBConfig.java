@@ -1,4 +1,4 @@
-package com.huawei.allinone.config;
+package com.huawei.allinone.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
