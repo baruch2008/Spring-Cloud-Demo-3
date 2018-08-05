@@ -14,9 +14,13 @@ public interface ICacheManager {
 
     List<?> getList(String key);
 
-    void saveMap(String key, Map<?, ?> value);
+    void saveMap(String key, Map<?, ?> values);
 
     Map<?, ?> getMap(String key);
 
     Object getMapValue(String key, String hashKey);
+    
+    void saveMapWithTimeout(String key, Map<?, ?> values);
+    
+    Object getBoundMapValue(String key, String hashKey);
 }

@@ -91,4 +91,19 @@ public class CacheTestController {
         System.out.println(value);
         return value;
     }
+
+    @RequestMapping(value = "/saveMapWithTimeout", method = RequestMethod.POST)
+    public void saveMapWithTimeout() {
+        Map<String, DomainUser> map = new HashMap<>();
+        map.put("Test1", new DomainUser());
+        map.put("Test2", new DomainUser());
+        cacheMgr.saveMapWithTimeout("Test4", map);
+    }
+
+    @RequestMapping(value = "/getBoundMapValue", method = RequestMethod.GET)
+    public Object getBoundMapValue() {
+        Object value = cacheMgr.getBoundMapValue("Test4", "Test1");
+        System.out.println(value);
+        return value;
+    }
 }

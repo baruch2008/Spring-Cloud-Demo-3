@@ -3,9 +3,11 @@ package com.huawei.allinone.common.cache;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -50,8 +52,8 @@ public class RedisCacheManager implements ICacheManager {
     }
 
     @Override
-    public void saveMap(String key, Map<?, ?> value) {
-        redisTemplate.opsForHash().putAll(key, value);
+    public void saveMap(String key, Map<?, ?> values) {
+        redisTemplate.opsForHash().putAll(key, values);
     }
 
     @Override
@@ -62,5 +64,21 @@ public class RedisCacheManager implements ICacheManager {
     @Override
     public Object getMapValue(String key, String hashKey) {
         return redisTemplate.opsForHash().get(key, hashKey);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public void saveMapWithTimeout(String key, Map<?, ?> values) {
+        BoundHashOperations operation = redisTemplate.boundHashOps(key);
+        operation.putAll(values);
+        /**
+         * 设置超时时间必须放在放置值之后
+         */
+        operation.expire(10, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public Object getBoundMapValue(String key, String hashKey) {
+        return redisTemplate.boundHashOps(key).get(hashKey);
     }
 }
