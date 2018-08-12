@@ -36,11 +36,33 @@ public class RedisCacheManager implements ICacheManager {
 
     @Override
     public void saveList(String key, List<?> values) {
-        redisTemplate.opsForList().leftPushAll(key, values);
+        if (null == redisTemplate.opsForList().index(key, 0)) {
+            redisTemplate.opsForList().leftPush(key, values);
+        } else {
+            // 当Key不存在时会报错
+            redisTemplate.opsForList().set(key, 0, values);
+        }
     }
 
     @Override
     public List<?> getList(String key) {
+        Object obj = redisTemplate.opsForList().index(key, 0);
+        if (null != obj) {
+            if (obj instanceof List) {
+                return (List<?>)obj;
+            }
+        }
+
+        return new ArrayList<>(0);
+    }
+
+    @Override
+    public void pushList(String key, List<?> values) {
+        redisTemplate.opsForList().leftPushAll(key, values);
+    }
+
+    @Override
+    public List<?> popList(String key) {
         Object obj = redisTemplate.opsForList().leftPop(key);
         if (null != obj) {
             if (obj instanceof List) {

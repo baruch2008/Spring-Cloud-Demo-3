@@ -13,6 +13,10 @@ public interface ICacheManager {
     void saveList(String key, List<?> values);
 
     List<?> getList(String key);
+    
+    void pushList(String key, List<?> values);
+    
+    List<?> popList(String key);
 
     void saveMap(String key, Map<?, ?> values);
 

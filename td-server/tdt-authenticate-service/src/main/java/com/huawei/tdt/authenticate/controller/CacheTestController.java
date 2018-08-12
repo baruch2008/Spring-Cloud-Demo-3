@@ -50,7 +50,7 @@ public class CacheTestController {
     public void saveList() {
         List<String> list = new ArrayList<>();
         list.add("Test1");
-        list.add("Test2");
+        list.add("Test3");
         cacheMgr.saveList("Test1", list);
     }
 
