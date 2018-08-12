@@ -16,7 +16,7 @@ public class DistributedLock implements IDistributedLock {
 
     private static final String ROOT_PATH = "/allinone_lock";
 
-    private String zkAddress = "192.168.154.180:2181";
+    private String zkAddress = "127.0.0.1:2181";
 
     private CuratorFramework client;
 
@@ -75,18 +75,38 @@ public class DistributedLock implements IDistributedLock {
     }
 
     public static void main(String[] args) {
-        IDistributedLock distributedLock = new DistributedLock("TestMgr");
-        long st = System.currentTimeMillis();
-        if (!distributedLock.tryLock()) {
-            return;
-        }
-        long et = System.currentTimeMillis();
-        System.out.println("Time:" + (et - st));
+        for (int j = 0; j < 10; j++) {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < 5; i++) {
+                        IDistributedLock distributedLock = new DistributedLock("TestMgr");
+                        long st = System.currentTimeMillis();
+                        if (!distributedLock.tryLock()) {
+                            System.out.println(Thread.currentThread().getName() + "," + i);
+                            return;
+                        }
+                        long et = System.currentTimeMillis();
+                        System.out.println("Time:" + (et - st) + "," + Thread.currentThread().getName() + "," + i);
 
-        try {
-            System.out.println("Hello");
-        } finally {
-            distributedLock.unLock();
+                        try {
+                            Thread.sleep(10000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            System.out.println("Hello");
+                        } finally {
+                            distributedLock.unLock();
+                        }
+                    }
+                }
+            };
+
+            Thread thread = new Thread(runnable);
+            thread.setName("Thread-" + j);
+            thread.start();
         }
     }
 }
