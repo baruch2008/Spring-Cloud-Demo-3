@@ -19,13 +19,13 @@ import com.huawei.tdt.common.util.CommonUtil;
 /**
  * 自定义拦截器，判断此次请求是否有权限.
  */
-@Component
+//@Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter
 {
     /**
      * 用户Mapper
      */
-    @Autowired
+    //@Autowired
     private UserMapper userMapper;
 
     /**

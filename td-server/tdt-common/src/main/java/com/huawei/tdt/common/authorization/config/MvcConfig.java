@@ -10,7 +10,7 @@ import com.huawei.tdt.common.authorization.intercepter.AuthorizationInterceptor;
 /**
  * 配置类，增加自定义拦截器和解析器
  */
-@Configuration
+//@Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
