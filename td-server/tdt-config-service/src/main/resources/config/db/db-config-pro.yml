@@ -19,4 +19,50 @@ etlapi:
 mongo:
   db:
     name: hxjf
-    host: 127.0.0.1 
+    host: 127.0.0.1
+   
+sharding:
+  jdbc:
+    datasource:
+      names: ds_0,ds_1,test
+      ds_0:
+        type: org.apache.commons.dbcp.BasicDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/demo_ds_0
+        username: root
+        password: 123456
+      ds_0:
+        type: org.apache.commons.dbcp.BasicDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/demo_ds_1
+        username: root
+        password: 123456
+      test:
+        type: org.apache.commons.dbcp.BasicDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/test
+        username: root
+        password: 123456
+    config:
+      sharding:
+        default-database-strategy:
+          inline:
+            sharding-column: user_id
+            algorithm-expression: ds_$->{user_id % 2}
+        tables:
+          t_order:
+            actual-data-nodes: ds_$->{0..1}.t_order_$->{0..1}
+            table-strategy:
+              inline:
+                sharding-column: order_id
+                algorithm-expression: t_order_$->{order_id % 2}
+            key-generator-column-name: order_id
+          t_order_item:
+            actual-data-nodes: ds_$->{0..1}.t_order_item_$->{0..1}
+            table-strategy:
+              inline:
+                sharding-column: order_id
+                algorithm-expression: t_order_item_$->{order_id % 2}
+            key-generator-column-name: order_item_id
+          test1:
+            actual-data-nodes: test.test1 

@@ -22,7 +22,7 @@ public class DataSourceConfig
      *
      * @return 数据源对象
      */
-    @Bean(name = "dataSource")
+    @Bean(name = "tdtDataSource")
     @Primary
     @ConfigurationProperties(prefix = "tdt.dbcp")
     public DataSource tdtDataSource()
@@ -43,7 +43,7 @@ public class DataSourceConfig
      * @return sql会话工厂bean
      * @throws Exception 异常
      */
-    @Bean(name="sqlSessionFactory")
+    @Bean(name="sqlSessionFactoryForTdt")
     @Primary
     public SqlSessionFactory sqlSessionFactory() throws Exception
     {
@@ -57,7 +57,7 @@ public class DataSourceConfig
      * @return SqlSessionTemplate
      * @throws Exception 异常
      */
-    @Bean(name="sqlSessionTemplate")
+    @Bean(name="sqlSessionTemplateForTdt")
     @Primary
     public SqlSessionTemplate sqlSessionTemplate() throws Exception {
         SqlSessionTemplate template = new SqlSessionTemplate(sqlSessionFactory()); 
