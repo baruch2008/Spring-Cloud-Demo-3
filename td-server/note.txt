@@ -2,3 +2,5 @@
 tdt_team_r_user：用于配置项目成员
 tdt_project_r_user：需要明确是否可以将不属于项目的人员配置为项目的相关角色，还是只能从已配置的成员中选取。
 					对于游客来说保存至此表中。
+					
+2、mvn install -pl xxx -am checkstyle:checkstyle
