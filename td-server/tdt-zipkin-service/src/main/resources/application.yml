@@ -1,6 +1,26 @@
 spring:
   application:
     name: tdt-zipkin-service
+  sleuth:
+    enabled: false
+    sampler:
+      percentage: 1
 
 server:
   port: 9017
+
+zipkin:
+  storage:
+    StorageComponent: elasticsearch
+    type: elasticsearch
+    elasticsearch:
+      hosts: 127.0.0.1:9200
+#      cluster: elasticsearch
+      index: zipkin
+#      index-shards: 0
+#      index-replicas: 0
+#      date-separator: -
+      max-requests: 100
+      username: elastic
+      password: 123456
+maxHttpHeaderSize: 8192
